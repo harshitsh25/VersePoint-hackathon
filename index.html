@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verse Point - Intelligent RAG Q&A System</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <nav class="nav-bar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="brand-icon">⚡</span>
+                <span class="brand-text">Verse Point</span>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="#home" class="nav-link" onclick="app.scrollToSection('home')">Home</a>
+                <a href="#features" class="nav-link" onclick="app.scrollToSection('features')">Features</a>
+                <a href="#models" class="nav-link" onclick="app.scrollToSection('models')">Models</a>
+                <button class="nav-link-btn" onclick="app.openSettings()">Settings</button>
+                <button class="nav-link-btn ask-btn" onclick="app.scrollToAskQuestion()">Ask Question</button>
+            </div>
+            <div class="nav-auth">
+                <button class="btn btn--outline nav-btn" onclick="app.openLoginModal()">Login</button>
+                <button class="btn btn--primary nav-btn" onclick="app.openSignupModal()">Create Account</button>
+            </div>
+            <button class="theme-toggle" id="themeToggle" onclick="app.toggleTheme()">
+                <span class="theme-icon">🌙</span>
+            </button>
+            <button class="nav-toggle" id="navToggle" onclick="app.toggleNav()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        <span class="gradient-text">Verse Point</span><br>
+                        <span class="neon-text">Intelligent RAG Q&A</span>
+                    </h1>
+                    <p class="hero-description">
+                        Upload documents and get instant, contextual answers using advanced 
+                        Retrieval-Augmented Generation technology. Perfect for students, 
+                        professionals, and researchers.
+                    </p>
+                    <div class="hero-buttons">
+                        <button class="btn btn--primary btn--lg neon-btn" onclick="app.scrollToAskQuestion()">
+                            Ask Question
+                        </button>
+                        <button class="btn btn--outline btn--lg" onclick="app.scrollToSection('features')">
+                            Learn More
+                        </button>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="floating-card">
+                        <div class="card-header">
+                            <span class="doc-icon">📄</span>
+                            <span>ML Guide.pdf</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="question">What is machine learning?</div>
+                            <div class="answer">Machine learning is a subset of AI...</div>
+                        </div>
+                    </div>
+                    <div class="floating-elements">
+                        <div class="float-element">🤖</div>
+                        <div class="float-element">📊</div>
+                        <div class="float-element">⚡</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Powerful Features</h2>
+            <div class="features-grid" id="featuresGrid">
+                <!-- Features will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Models Section -->
+    <section class="models" id="models">
+        <div class="container">
+            <h2 class="section-title">AI Models</h2>
+            <p class="section-subtitle">Choose the AI model that best fits your needs</p>
+            <div class="models-grid" id="modelsGrid">
+                <!-- Models will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Q&A Dashboard Section -->
+    <section class="qa-dashboard" id="qa-dashboard">
+        <div class="container">
+            <h2 class="section-title">Document Q&A Dashboard</h2>
+            
+            <div class="dashboard-content">
+                <div class="sidebar-panel">
+                    <div class="documents-section">
+                        <h3>Uploaded Documents</h3>
+                        <div class="document-list" id="documentList">
+                            <!-- Documents will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    <div class="model-selector">
+                        <label class="form-label">Selected Model:</label>
+                        <select class="form-control" id="modelSelect">
+                            <option value="chatgpt5">ChatGPT-5</option>
+                            <option value="claude">Claude</option>
+                            <option value="gemini">Gemini</option>
+                            <option value="perplexity">Perplexity</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="main-panel">
+                    <div class="upload-section">
+                        <div class="upload-area" id="uploadArea" ondrop="app.handleDrop(event)" ondragover="app.handleDragOver(event)">
+                            <div class="upload-content">
+                                <div class="upload-icon">📤</div>
+                                <h4>Drag & drop files here</h4>
+                                <p>Or click to browse (PDF, MD, HTML)</p>
+                                <input type="file" id="fileInput" multiple accept=".pdf,.md,.html" hidden>
+                                <button class="btn btn--primary" onclick="document.getElementById('fileInput').click()">
+                                    Browse Files
+                                </button>
+                            </div>
+                        </div>
+                        <div class="upload-progress" id="uploadProgress" style="display: none;">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <span class="progress-text" id="progressText">Uploading...</span>
+                        </div>
+                    </div>
+
+                    <div class="chat-section">
+                        <div class="chat-container" id="chatContainer">
+                            <!-- Chat messages will be populated by JavaScript -->
+                        </div>
+                        <div class="chat-input">
+                            <form class="chat-form" id="chatForm">
+                                <input type="text" class="form-control chat-input-field" id="chatInput" 
+                                       placeholder="Ask a question about your documents..." required>
+                                <button type="submit" class="btn btn--primary chat-send-btn">
+                                    <span>Send</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-brand">
+                        <span class="brand-icon">⚡</span>
+                        <span class="brand-text">Verse Point</span>
+                    </div>
+                    <p>Intelligent Q&A system powered by advanced RAG technology</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Connect</h4>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/in/harshit-sharma-379a8b329/" target="_blank" class="social-link">
+                            <i class="fab fa-linkedin"></i>
+                            LinkedIn
+                        </a>
+                        <a href="https://github.com/harshitsh25" target="_blank" class="social-link">
+                            <i class="fab fa-github"></i>
+                            GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Verse Point. Built for Excellence | Team - Dream Chasers</p>
+                <p>Powered by OpenAI APIs</p>
+                <p>Built for HCL GUVI Hackathon 2025.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal hidden">
+        <div class="modal-overlay" onclick="app.closeLoginModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Welcome Back</h2>
+                <button class="modal-close" onclick="app.closeLoginModal()">×</button>
+            </div>
+            <form class="modal-form" id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" id="loginUsername" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password" required>
+                </div>
+                <div class="demo-credentials">
+                    <small>Demo credentials: username: <strong>demo</strong>, password: <strong>demo123</strong></small>
+                </div>
+                <button type="submit" class="btn btn--primary btn--full-width neon-btn">Sign In</button>
+            </form>
+            <div class="modal-footer">
+                <p>Don't have an account? <a href="#" onclick="app.openSignupModal()">Sign up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal hidden">
+        <div class="modal-overlay" onclick="app.closeSignupModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create Account</h2>
+                <button class="modal-close" onclick="app.closeSignupModal()">×</button>
+            </div>
+            <form class="modal-form" id="signupForm">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="signupName" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" id="signupEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" id="signupUsername" placeholder="Choose a username" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" id="signupPassword" placeholder="Choose a password" required>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" required>
+                        I agree to the Terms and Conditions
+                    </label>
+                </div>
+                <button type="submit" class="btn btn--primary btn--full-width neon-btn">Create Account</button>
+            </form>
+            <div class="modal-footer">
+                <p>Already have an account? <a href="#" onclick="app.openLoginModal()">Sign in</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Panel -->
+    <div id="settingsPanel" class="settings-panel hidden">
+        <div class="settings-overlay" onclick="app.closeSettings()"></div>
+        <div class="settings-content">
+            <div class="settings-header">
+                <h2>Settings</h2>
+                <button class="settings-close" onclick="app.closeSettings()">×</button>
+            </div>
+            <div class="settings-body" id="settingsBody">
+                <!-- Settings will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Processing your request...</p>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <div class="notification-content">
+            <span class="notification-icon"></span>
+            <span class="notification-text"></span>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
